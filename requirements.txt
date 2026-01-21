@@ -1,0 +1,4 @@
+polars
+pypdf[full]
+pdf2image
+pytesseract
