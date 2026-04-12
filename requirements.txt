@@ -1,0 +1,16 @@
+spacy
+pytesseract
+PyPDF2
+pdf2image
+pandas
+sqlalchemy
+psycopg2
+streamlit
+plotly
+python-dotenv
+polars
+minio
+Pillow
+opencv-python
+numpy
+scikit-learn
