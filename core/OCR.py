@@ -35,9 +35,10 @@ from pdf2image import convert_from_path
 import pytesseract
 from PIL import Image
 import cv2
+import numpy as np
 
 # Cargar variables de entorno
-load_dotenv("config/.env")
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 # ═══════════════════════════════════════ CONFIGURACIÓN ═══════════════════════════════════════
 
@@ -62,7 +63,7 @@ class ConfigPaths:
     # Subcarpetas por tipo de documento
     SUBCARPETAS = {
         "Artes": BASE_EXTRACTED / "Artes",
-        "Especificaciones": BASE_EXTRACTED / "Especificaciones",
+        "Especificaciones": BASE_EXTRACTED / "especificaciones",
         "formulas": BASE_EXTRACTED / "formulas"
     }
     
@@ -184,7 +185,7 @@ class OCRProcessor:
             Imagen procesada
         """
         # Convertir PIL a numpy para OpenCV
-        cv_image = cv2.cvtColor(cv2.UMat(image).get(), cv2.COLOR_RGB2BGR)
+        cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         
         # Aumentar resolución
         scale_percent = 200
@@ -260,7 +261,14 @@ class OCRProcessor:
             return texto
         
         except Exception as e:
-            logger.error(f"OCR falló: {e}")
+            error_msg = str(e)
+            if "spa.traineddata" in error_msg or "Failed loading language" in error_msg:
+                logger.error(
+                    f"OCR falló: paquete de idioma español no instalado. "
+                    f"Solución: sudo apt install tesseract-ocr-spa"
+                )
+            else:
+                logger.error(f"OCR falló: {e}")
             return ""
     
     @staticmethod
