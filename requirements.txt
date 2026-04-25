@@ -10,7 +10,9 @@ plotly
 python-dotenv
 polars
 minio
+boto3
 Pillow
 opencv-python
 numpy
 scikit-learn
+dateparser

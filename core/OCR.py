@@ -10,11 +10,11 @@ Requiere:
     - config/.env configurado con credenciales MinIO
     - Tesseract OCR instalado en el sistema
     - Bucket MinIO: grupo-moreno
-    - Estructura MinIO: grupo-moreno/data/Artes/, grupo-moreno/data/Especificaciones/, grupo-moreno/data/formulas/
+    - Estructura MinIO: grupo-moreno/data/Artes/, grupo-moreno/data/especificaciones/, grupo-moreno/data/formulas/
 
 Output:
     - data/extracted/Artes/         (PDFs extraídos de Artes)
-    - data/extracted/Especificaciones/ (PDFs extraídos de Especificaciones)
+    - data/extracted/especificaciones/ (PDFs extraídos de especificaciones)
     - data/extracted/formulas/      (PDFs extraídos de formulas)
     - Cada carpeta contiene .txt y .json
 """
@@ -51,7 +51,7 @@ class ConfigMinIO:
     SECURE = os.getenv("MINIO_SECURE", "False").lower() == "true"
     
     # Estructura de carpetas en MinIO
-    CARPETAS_MINIO = ["data/Artes", "data/Especificaciones", "data/formulas"]
+    CARPETAS_MINIO = ["data/Artes", "data/especificaciones", "data/formulas"]
 
 
 class ConfigPaths:
@@ -63,7 +63,7 @@ class ConfigPaths:
     # Subcarpetas por tipo de documento
     SUBCARPETAS = {
         "Artes": BASE_EXTRACTED / "Artes",
-        "Especificaciones": BASE_EXTRACTED / "especificaciones",
+        "especificaciones": BASE_EXTRACTED / "especificaciones",
         "formulas": BASE_EXTRACTED / "formulas"
     }
     
@@ -311,7 +311,7 @@ class MetadataGenerator:
             pdf_nombre: Nombre del PDF
             texto: Contenido extraído
             metodo_extraccion: 'digital' u 'ocr'
-            tipo_doc: Tipo de documento (Artes, Especificaciones, formulas)
+            tipo_doc: Tipo de documento (Artes, especificaciones, formulas)
             
         Returns:
             Dict con metadatos
@@ -341,13 +341,13 @@ class ProcessadorPrincipal:
         )
         self.resultados_por_tipo = {
             "Artes": {"exitosos": 0, "con_error": 0, "detalles": []},
-            "Especificaciones": {"exitosos": 0, "con_error": 0, "detalles": []},
+            "especificaciones": {"exitosos": 0, "con_error": 0, "detalles": []},
             "formulas": {"exitosos": 0, "con_error": 0, "detalles": []}
         }
     
     def ProcesarCarpeta(self, tipo_doc: str) -> bool:
         """
-        Procesa una carpeta específica (Artes, Especificaciones, formulas)
+        Procesa una carpeta específica (Artes, especificaciones, formulas)
         
         Args:
             tipo_doc: Tipo de documento
@@ -431,7 +431,7 @@ class ProcessadorPrincipal:
             return False
         
         # PASO 2: Procesar cada carpeta
-        for tipo_doc in ["Artes", "Especificaciones", "formulas"]:
+        for tipo_doc in ["Artes", "especificaciones", "formulas"]:
             self.ProcesarCarpeta(tipo_doc)
         
         # PASO 3: Mostrar resumen final
@@ -448,7 +448,7 @@ class ProcessadorPrincipal:
         total_exitosos = 0
         total_errores = 0
         
-        for tipo_doc in ["Artes", "Especificaciones", "formulas"]:
+        for tipo_doc in ["Artes", "especificaciones", "formulas"]:
             datos = self.resultados_por_tipo[tipo_doc]
             exitosos = datos["exitosos"]
             errores = datos["con_error"]
@@ -495,7 +495,7 @@ class ProcessadorPrincipal:
         logger.info(f"\n✓ Resumen global guardado en: {resumen_global_path}")
         logger.info(f"✓ Textos extraídos en: {ConfigPaths.BASE_EXTRACTED}")
         logger.info(f"  ├─ Artes/")
-        logger.info(f"  ├─ Especificaciones/")
+        logger.info(f"  ├─ especificaciones/")
         logger.info(f"  └─ formulas/")
 
 
